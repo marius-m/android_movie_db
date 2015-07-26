@@ -35,6 +35,24 @@ public class ConfigurationEntitySerializationTest {
     }
 
     @Test
+    public void testDefaultInitTest() throws Exception {
+        ConfigurationEntity entity = new ConfigurationEntity();
+        assertNotNull(entity);
+        assertEquals(0, entity.changeKeys.size());
+        assertNotNull(entity.images);
+        assertNotNull(entity.images.baseUrl);
+        assertNotNull(entity.images.secureBaseUrl);
+        assertNotNull(entity.images.backdropSizes);
+        assertEquals(0, entity.images.backdropSizes.size());
+        assertNotNull(entity.images.logoSizes);
+        assertEquals(0, entity.images.logoSizes.size());
+        assertNotNull(entity.images.stillSizes);
+        assertEquals(0, entity.images.stillSizes.size());
+        assertNotNull(entity.images.profileSizes);
+        assertEquals(0, entity.images.profileSizes.size());
+    }
+
+    @Test
     public void testParseTest() throws Exception {
         assertNotNull(entity);
         verifyResponse(entity);

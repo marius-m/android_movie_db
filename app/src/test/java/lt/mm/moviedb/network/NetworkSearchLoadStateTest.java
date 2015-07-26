@@ -13,13 +13,13 @@ public class NetworkSearchLoadStateTest {
 
     private RequestQueue requestQueue;
     private NetworkSearch networkSearch;
-    private NetworkSearch.LoadListener loadListener;
+    private LoadListener loadListener;
 
     @Before
     public void setUp() throws Exception {
         requestQueue = mock(RequestQueue.class);
         networkSearch = new NetworkSearch(String.class, requestQueue);
-        loadListener = mock(NetworkSearch.LoadListener.class);
+        loadListener = mock(LoadListener.class);
         networkSearch.setLoadListener(loadListener);
     }
 

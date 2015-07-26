@@ -1,7 +1,6 @@
 package lt.mm.moviedb;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -15,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import lt.mm.moviedb.adapters.SearchAdapter;
 import lt.mm.moviedb.entities.SearchItem;
 import lt.mm.moviedb.entities.SearchList;
+import lt.mm.moviedb.network.LoadListener;
 import lt.mm.moviedb.network.NetworkSearch;
 import lt.mm.moviedb.utils.Log;
 import lt.mm.moviedb.views.MovieSearchInput;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends Activity {
 
-    private NetworkSearch<SearchList> networkSearch;
+    private NetworkSearch networkSearch;
     private ProgressBar progressBar;
     private MovieSearchInput searchInput;
     private ListView outputList;
@@ -39,7 +39,7 @@ public class SearchActivity extends Activity {
         searchItems = new ArrayList<>();
 
         // Controller init
-        networkSearch = new NetworkSearch<>(SearchList.class, Volley.newRequestQueue(this));
+        networkSearch = new NetworkSearch(SearchList.class, Volley.newRequestQueue(this));
         networkSearch.setLoadListener(loadListener);
         configurationCall();
 
@@ -84,7 +84,7 @@ public class SearchActivity extends Activity {
 
     //region Listeners
 
-    NetworkSearch.LoadListener<SearchList> loadListener = new NetworkSearch.LoadListener<SearchList>() {
+    LoadListener<SearchList> loadListener = new LoadListener<SearchList>() {
         @Override
         public void onLoadStatusChange(boolean loading) {
             updateViewsByLoadStateChange();
