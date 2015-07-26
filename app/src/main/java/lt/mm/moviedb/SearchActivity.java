@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.android.volley.toolbox.Volley;
+import lt.mm.moviedb.adapters.SearchAdapter;
+import lt.mm.moviedb.entities.SearchItem;
 import lt.mm.moviedb.entities.SearchList;
 import lt.mm.moviedb.network.NetworkSearch;
 import lt.mm.moviedb.utils.Log;
 import lt.mm.moviedb.views.MovieSearchInput;
+
+import java.util.ArrayList;
 
 
 public class SearchActivity extends ActionBarActivity {
@@ -18,11 +22,15 @@ public class SearchActivity extends ActionBarActivity {
     private ProgressBar progressBar;
     private MovieSearchInput searchInput;
     private ListView outputList;
+    private ArrayList<SearchItem> searchItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // Variables
+        searchItems = new ArrayList<>();
 
         // Controller init
         networkSearch = new NetworkSearch<>(SearchList.class, Volley.newRequestQueue(this));
@@ -34,6 +42,7 @@ public class SearchActivity extends ActionBarActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
         outputList = (ListView) findViewById(R.id.output_list);
+        outputList.setAdapter(new SearchAdapter(this, searchItems));
 
         // Initial state update
         updateViewsByLoadStateChange();
@@ -58,7 +67,8 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         public void onLoadSuccess(SearchList response) {
-            Log.debugWarning(response.toString());
+            searchItems.clear();
+            searchItems.addAll(response.getResults());
         }
 
         @Override
