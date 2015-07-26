@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.android.volley.toolbox.Volley;
+import lt.mm.moviedb.entities.SearchList;
 import lt.mm.moviedb.network.NetworkSearch;
 import lt.mm.moviedb.utils.Log;
 import lt.mm.moviedb.views.MovieSearchInput;
@@ -13,7 +14,7 @@ import lt.mm.moviedb.views.MovieSearchInput;
 
 public class SearchActivity extends ActionBarActivity {
 
-    private NetworkSearch networkSearch;
+    private NetworkSearch<SearchList> networkSearch;
     private ProgressBar progressBar;
     private MovieSearchInput searchInput;
     private ListView outputList;
@@ -24,7 +25,7 @@ public class SearchActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search);
 
         // Controller init
-        networkSearch = new NetworkSearch(Volley.newRequestQueue(this));
+        networkSearch = new NetworkSearch<>(SearchList.class, Volley.newRequestQueue(this));
         networkSearch.setLoadListener(loadListener);
 
         // View init
@@ -49,15 +50,15 @@ public class SearchActivity extends ActionBarActivity {
 
     //region Listeners
 
-    NetworkSearch.LoadListener loadListener = new NetworkSearch.LoadListener() {
+    NetworkSearch.LoadListener<SearchList> loadListener = new NetworkSearch.LoadListener<SearchList>() {
         @Override
         public void onLoadStatusChange(boolean loading) {
             updateViewsByLoadStateChange();
         }
 
         @Override
-        public void onLoadSuccess(String request, String response) {
-            Log.debugWarning("Response ("+request+"): "+response);
+        public void onLoadSuccess(SearchList response) {
+            Log.debugWarning(response.toString());
         }
 
         @Override
@@ -65,7 +66,6 @@ public class SearchActivity extends ActionBarActivity {
             Log.debugWarning("Fail: "+error);
         }
     };
-
 
     MovieSearchInput.InputListener inputListener = new MovieSearchInput.InputListener() {
         @Override

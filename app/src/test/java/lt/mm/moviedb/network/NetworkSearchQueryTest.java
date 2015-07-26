@@ -17,7 +17,7 @@ public class NetworkSearchQueryTest {
     @Before
     public void setUp() throws Exception {
         requestQueue = mock(RequestQueue.class);
-        networkSearch = new NetworkSearch(requestQueue);
+        networkSearch = new NetworkSearch(String.class, requestQueue);
     }
 
     @Test

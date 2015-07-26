@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -19,7 +18,7 @@ public class NetworkSearchLoadStateTest {
     @Before
     public void setUp() throws Exception {
         requestQueue = mock(RequestQueue.class);
-        networkSearch = new NetworkSearch(requestQueue);
+        networkSearch = new NetworkSearch(String.class, requestQueue);
         loadListener = mock(NetworkSearch.LoadListener.class);
         networkSearch.setLoadListener(loadListener);
     }

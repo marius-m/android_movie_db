@@ -5,15 +5,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import lt.mm.moviedb.Constants;
-import lt.mm.moviedb.entities.SearchItem;
-import lt.mm.moviedb.entities.SearchList;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectReader;
-
-import java.io.IOException;
 
 /**
  * Created by mariusmerkevicius on 7/26/15.
@@ -22,20 +14,22 @@ import java.io.IOException;
  */
 
 // Fixme : needs more abstraction for any networking client to be replaced
-public class NetworkSearch {
+public class NetworkSearch<Type> {
     public static final String QUERY_PREFIX = "query=";
 
     private RequestQueue queue;
+    private Class classType;
 
     LoadListener loadListener;
 
     boolean loading = false;
-    private StringRequest stringRequest;
+    private JsonRequest<Type> request;
 
-    public NetworkSearch(RequestQueue requestQueue) {
+    public NetworkSearch(Class classType, RequestQueue requestQueue) {
         if (requestQueue == null)
             throw new IllegalArgumentException("Cant function without RequestQueue!");
-        queue = requestQueue;
+        this.classType = classType;
+        this.queue = requestQueue;
     }
 
     public void search(String search) {
@@ -43,13 +37,15 @@ public class NetworkSearch {
             return;
         if (isLoading())
             queue.stop();
-        if (stringRequest != null)
-            queue.cancelAll(stringRequest);
+        if (request != null)
+            queue.cancelAll(request);
         // todo remove this
         search = "terminator";
         String url = Constants.BASE_URL + Constants.LINK + "?" + Constants.API_KEY +"&" + QUERY_PREFIX + search;
-        stringRequest = new StringRequest(Request.Method.GET, url, responseListener, errorListener);
-        queue.add(stringRequest);
+        request = new JsonRequest<>(classType, Request.Method.GET, url,
+                successListener,
+                errorListener);
+        queue.add(request);
         queue.start();
         setLoading(true);
     }
@@ -76,28 +72,14 @@ public class NetworkSearch {
 
     //region Listeners
 
-    Response.Listener<String> responseListener = new Response.Listener<String>() {
+    Response.Listener<Type> successListener = new Response.Listener<Type>() {
         @Override
-        public void onResponse(String response) {
-            if (stringRequest == null)
+        public void onResponse(Type response) {
+            if (request == null)
                 return;
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,true);
-//            mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-//            mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-            ObjectReader objectReader = mapper.reader(SearchList.class);
-            SearchList returnResponse = null;
-            try {
-                returnResponse = objectReader.readValue(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             if (loadListener != null)
-                loadListener.onLoadSuccess(stringRequest.getUrl(), response);
-            stringRequest = null;
+                loadListener.onLoadSuccess(response);
+            request = null;
             setLoading(false);
         }
     };
@@ -107,11 +89,11 @@ public class NetworkSearch {
         public void onErrorResponse(VolleyError error) {
             if (loadListener != null)
                 loadListener.onLoadFail(error.toString());
-            stringRequest = null;
+            request = null;
             setLoading(false);
         }
-
     };
+
 
     //endregion
 
@@ -120,7 +102,7 @@ public class NetworkSearch {
     /**
      * An interface that reports networking state changes
      */
-    public interface LoadListener {
+    public interface LoadListener<Type> {
         /**
          * Reports if class is loading something
          * @param loading load state
@@ -131,7 +113,7 @@ public class NetworkSearch {
          * Callback with a string response from the server
          * @param response
          */
-        void onLoadSuccess(String request, String response);
+        void onLoadSuccess(Type response);
 
         /**
          * Callback with a fail message from the server

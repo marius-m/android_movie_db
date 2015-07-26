@@ -35,4 +35,14 @@ public class SearchList {
     public ArrayList<SearchItem> getResults() {
         return results;
     }
+
+    @Override
+    public String toString() {
+        return "SearchList{" +
+                "page=" + page +
+                ", totalPages=" + totalPages +
+                ", totalResults=" + totalResults +
+                ", results=" + results +
+                '}';
+    }
 }
