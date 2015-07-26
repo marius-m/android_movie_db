@@ -29,27 +29,6 @@ public class SearchActivity extends ActionBarActivity {
 //        textView.setAdapter(adapter);
 
 
-        // Instantiate the RequestQueue.
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        String url ="https://api.themoviedb.org/3/"+"search/movie?api_key=f13d3cddb56308882dd225a7e06c92d1&query=terminator";
-
-        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.e("asdc", "Response: "+response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("asdc", "Response: " + error);
-//            }
-//        });
-
-        // Add the request to the RequestQueue.
-//        queue.add(stringRequest);
-//        queue.start();
     }
 
     private static final String[] COUNTRIES = new String[] {

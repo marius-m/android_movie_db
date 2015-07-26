@@ -12,6 +12,7 @@ import lt.mm.moviedb.utils.Utils;
 
 /**
  * Created by mariusmerkevicius on 7/26/15.
+ * View class that is responsible for handling user input.
  */
 public class MovieSearchInput extends RelativeLayout {
 
@@ -43,6 +44,8 @@ public class MovieSearchInput extends RelativeLayout {
         initChildViews(context);
     }
 
+    //region Convenience
+
     private void initChildViews(Context context) {
         progressBar = new ProgressBar(context);
         LayoutParams progressParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -55,5 +58,7 @@ public class MovieSearchInput extends RelativeLayout {
         editParams.addRule(RelativeLayout.LEFT_OF, progressBar.getId());
         addView(inputView, editParams);
     }
+
+    //endregion
 
 }
