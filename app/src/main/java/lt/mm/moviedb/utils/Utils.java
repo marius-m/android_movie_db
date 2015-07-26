@@ -1,5 +1,10 @@
 package lt.mm.moviedb.utils;
 
+import android.content.Context;
+import android.graphics.Rect;
+import android.view.Display;
+import android.view.WindowManager;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,4 +31,27 @@ public class Utils {
             }
         }
     }
+
+    /**
+     * Returns screen dimensions, minus navigation bar
+     * @return
+     */
+    public static Rect pullScreenSize(Context context) {
+        if (context == null)
+            return null;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Rect screenSize = new Rect();
+        if (android.os.Build.VERSION.SDK_INT >= 13) {
+            android.graphics.Point size = new android.graphics.Point();
+            display.getSize(size);
+            screenSize.right = size.x;
+            screenSize.bottom = size.y;
+        } else {
+            screenSize.right = display.getWidth();
+            screenSize.bottom = display.getHeight();
+        }
+        return screenSize;
+    }
+
 }

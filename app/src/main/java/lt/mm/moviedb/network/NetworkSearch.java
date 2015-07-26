@@ -2,6 +2,7 @@ package lt.mm.moviedb.network;
 
 import android.text.TextUtils;
 import com.android.volley.RequestQueue;
+import lt.mm.moviedb.Constants;
 import lt.mm.moviedb.entities.SearchList;
 
 /**
@@ -20,6 +21,11 @@ public class NetworkSearch extends AbsNetwork<SearchList> {
     @Override
     protected String urlPostfix() {
         return QUERY_POSTFIX + searchTerm;
+    }
+
+    @Override
+    protected String urlSectionLink() {
+        return Constants.MOVIE_LINK;
     }
 
     /**

@@ -1,6 +1,7 @@
 package lt.mm.moviedb.adapters;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import lt.mm.moviedb.R;
+import lt.mm.moviedb.entities.ConfigurationEntity;
 import lt.mm.moviedb.entities.SearchItem;
+import lt.mm.moviedb.persistance.Settings;
+import lt.mm.moviedb.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -21,9 +25,12 @@ public class SearchAdapter extends ArrayAdapter<SearchItem> {
     private final Context context;
     private final ArrayList<SearchItem> searchItems;
     private final ImageLoader imageLoader;
+    private final ConfigurationEntity configurationEntity;
 
     public SearchAdapter(Context context, ArrayList<SearchItem> searchItems) {
         super(context, -1, searchItems);
+        configurationEntity = Settings.getInstance(context).getConfigurationEntity();
+        // screenSize = Utils.pullScreenSize(context);
         this.imageLoader = ImageLoader.getInstance();
         this.context = context;
         this.searchItems = searchItems;
@@ -46,7 +53,10 @@ public class SearchAdapter extends ArrayAdapter<SearchItem> {
         SearchItem searchItem = searchItems.get(position);
         holder.titleView.setText(searchItem.getTitle());
         holder.subtitleView.setText(String.format("%s: %s", context.getString(R.string.search_item_releasedate), searchItem.getReleaseDate()));
-        imageLoader.displayImage(searchItem.getPosterPath(), holder.imageResource);
+        String imageUrl = configurationEntity.formPosterImageUrl(searchItem.getPosterPath(),
+                context.getResources().getDimensionPixelSize(R.dimen.search_image_width));
+        if (imageUrl != null)
+            imageLoader.displayImage(imageUrl, holder.imageResource);
         return rowView;
     }
 

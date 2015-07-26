@@ -12,8 +12,6 @@ import lt.mm.moviedb.persistance.Settings;
  */
 
 public class NetworkConfiguration extends AbsNetwork<ConfigurationEntity> {
-    public static final String QUERY_POSTFIX = "configuration";
-
     private Context context;
 
     Listener listener;
@@ -31,7 +29,12 @@ public class NetworkConfiguration extends AbsNetwork<ConfigurationEntity> {
 
     @Override
     protected String urlPostfix() {
-        return QUERY_POSTFIX;
+        return null;
+    }
+
+    @Override
+    protected String urlSectionLink() {
+        return "configuration";
     }
 
     public void loadConfiguration() {

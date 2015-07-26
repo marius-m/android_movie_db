@@ -31,6 +31,12 @@ public abstract class AbsNetwork<Type> {
     protected abstract String urlPostfix();
 
     /**
+     * Defines the section to load in API
+     * @return
+     */
+    protected abstract String urlSectionLink();
+
+    /**
      * Initializes load method
      */
     public void load() {
@@ -38,7 +44,8 @@ public abstract class AbsNetwork<Type> {
             queue.stop();
         if (request != null)
             queue.cancelAll(request);
-        String url = Constants.BASE_URL + Constants.MOVIE_LINK + "?" + Constants.API_KEY +"&" + urlPostfix();
+        String postfix = (urlPostfix() != null) ? "&" + urlPostfix() : "";
+        String url = Constants.BASE_URL + urlSectionLink() + "?" + Constants.API_KEY + postfix;
         request = new JsonRequest<>(classType, Request.Method.GET, url,
                 successListener,
                 errorListener);
