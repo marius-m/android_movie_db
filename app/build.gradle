@@ -17,9 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        androidTest {
+            setRoot('src/test')
+        }
+    }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+
+    // This is just weird, only one should be here.
+    testCompile "org.robolectric:robolectric:3.0"
+    androidTestCompile "org.robolectric:robolectric:3.0"
 }
