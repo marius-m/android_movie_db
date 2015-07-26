@@ -40,7 +40,7 @@ dependencies {
     // Json to object handling
     compile 'com.fasterxml:jackson-module-json-org:0.9.1'
 
-    // Fixme : Find out why we need to import both androidTestCompile and testCompile for testing framework to run
+    // Fixme : Find out why we need to import both androidTestCompile and testCompile for testing framework to runTimer
     testCompile "org.powermock:powermock-api-mockito:1.5.1"
     androidTestCompile 'org.powermock:powermock-api-mockito:1.5.1'
     testCompile "org.robolectric:robolectric:3.0"
