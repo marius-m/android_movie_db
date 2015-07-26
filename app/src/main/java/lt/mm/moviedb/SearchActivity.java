@@ -2,37 +2,79 @@ package lt.mm.moviedb;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import com.android.volley.toolbox.Volley;
+import lt.mm.moviedb.network.NetworkSearch;
+import lt.mm.moviedb.utils.Log;
+import lt.mm.moviedb.views.MovieSearchInput;
 
 
 public class SearchActivity extends ActionBarActivity {
+
+    private NetworkSearch networkSearch;
+    private ProgressBar progressBar;
+    private MovieSearchInput searchInput;
+    private ListView outputList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_dropdown_item_1line, COUNTRIES);
-//        AutoCompleteTextView textView = (AutoCompleteTextView)
-//                findViewById(R.id.input_search);
-//        textView.setAdapter(adapter);
+        // Controller init
+        networkSearch = new NetworkSearch(Volley.newRequestQueue(this));
+        networkSearch.setLoadListener(loadListener);
 
+        // View init
+        searchInput = (MovieSearchInput) findViewById(R.id.input_search);
+        searchInput.setInputListener(inputListener);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        outputList = (ListView) findViewById(R.id.output_list);
+
+        // Initial state update
+        updateViewsByLoadStateChange();
     }
 
-    private static final String[] COUNTRIES = new String[] {
-            "Belgium", "France", "Italy", "Germany", "Spain"
+    //region Convenience
+
+    private void updateViewsByLoadStateChange() {
+        progressBar.setVisibility((networkSearch.isLoading()) ? View.VISIBLE : View.GONE);
+        outputList.setVisibility( (networkSearch.isLoading()) ? View.GONE : View.VISIBLE );
+    }
+
+    //endregion
+
+    //region Listeners
+
+    NetworkSearch.LoadListener loadListener = new NetworkSearch.LoadListener() {
+        @Override
+        public void onLoadStatusChange(boolean loading) {
+            updateViewsByLoadStateChange();
+        }
+
+        @Override
+        public void onLoadSuccess(String response) {
+
+        }
+
+        @Override
+        public void onLoadFail(String error) {
+
+        }
     };
+
+
+    MovieSearchInput.InputListener inputListener = new MovieSearchInput.InputListener() {
+        @Override
+        public void onInputChange(String input) {
+            Log.debugError("Input:" +input);
+        }
+    };
+
+
+    //endregion
 
 }

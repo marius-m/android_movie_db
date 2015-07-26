@@ -6,27 +6,22 @@
                 android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SearchActivity">
 
     <lt.mm.moviedb.views.MovieSearchInput
+            android:id="@+id/input_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
 
-    <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_below="@id/input_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <!--<AutoCompleteTextView-->
-                <!--android:id="@+id/input_search"-->
-                <!--android:layout_toLeftOf="@+id/progress"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--/>-->
-
-        <!--<ProgressBar-->
-                <!--android:id="@+id/progress"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-    <!--</RelativeLayout>-->
+    <ListView
+            android:id="@+id/output_list"
+            android:layout_below="@id/input_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
     <!--Other content in this window-->
 

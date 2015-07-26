@@ -19,7 +19,7 @@ public class NetworkSearch {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String LINK = "search/movie";
     public static final String API_KEY = "api_key=f13d3cddb56308882dd225a7e06c92d1";
-    public static final String QUERY_PREFIX = "query=terminator";
+    public static final String QUERY_PREFIX = "query=";
 
     private RequestQueue queue;
 
@@ -36,7 +36,7 @@ public class NetworkSearch {
     public void search(String search) {
         if (TextUtils.isEmpty(search))
             return;
-        String url = BASE_URL + LINK + "?" + API_KEY +"&" + QUERY_PREFIX;
+        String url = BASE_URL + LINK + "?" + API_KEY +"&" + QUERY_PREFIX + search;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener, errorListener);
         queue.add(stringRequest);
         queue.start();
@@ -88,9 +88,26 @@ public class NetworkSearch {
 
     //region Classes
 
+    /**
+     * An interface that reports networking state changes
+     */
     public interface LoadListener {
+        /**
+         * Reports if class is loading something
+         * @param loading load state
+         */
         void onLoadStatusChange(boolean loading);
+
+        /**
+         * Callback with a string response from the server
+         * @param response
+         */
         void onLoadSuccess(String response);
+
+        /**
+         * Callback with a fail message from the server
+         * @param error
+         */
         void onLoadFail(String error);
     }
 
