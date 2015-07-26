@@ -39,9 +39,7 @@ public class NetworkSearch<Type> {
             queue.stop();
         if (request != null)
             queue.cancelAll(request);
-        // todo remove this
-        search = "terminator";
-        String url = Constants.BASE_URL + Constants.LINK + "?" + Constants.API_KEY +"&" + QUERY_PREFIX + search;
+        String url = Constants.BASE_URL + Constants.MOVIE_LINK + "?" + Constants.API_KEY +"&" + QUERY_PREFIX + search;
         request = new JsonRequest<>(classType, Request.Method.GET, url,
                 successListener,
                 errorListener);
@@ -52,6 +50,10 @@ public class NetworkSearch<Type> {
 
     //region Getters / Setters
 
+    /**
+     * Sets the loading state
+     * @param loading provided loading state
+     */
     void setLoading(boolean loading) {
         if (this.loading == loading)
             return;

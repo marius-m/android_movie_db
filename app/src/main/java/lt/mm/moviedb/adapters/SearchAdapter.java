@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import lt.mm.moviedb.R;
 import lt.mm.moviedb.entities.SearchItem;
 
@@ -19,9 +20,11 @@ import java.util.ArrayList;
 public class SearchAdapter extends ArrayAdapter<SearchItem> {
     private final Context context;
     private final ArrayList<SearchItem> searchItems;
+    private final ImageLoader imageLoader;
 
     public SearchAdapter(Context context, ArrayList<SearchItem> searchItems) {
         super(context, -1, searchItems);
+        this.imageLoader = ImageLoader.getInstance();
         this.context = context;
         this.searchItems = searchItems;
     }
@@ -43,6 +46,7 @@ public class SearchAdapter extends ArrayAdapter<SearchItem> {
         SearchItem searchItem = searchItems.get(position);
         holder.titleView.setText(searchItem.getTitle());
         holder.subtitleView.setText(String.format("%s: %s", context.getString(R.string.search_item_releasedate), searchItem.getReleaseDate()));
+        imageLoader.displayImage(searchItem.getPosterPath(), holder.imageResource);
         return rowView;
     }
 
