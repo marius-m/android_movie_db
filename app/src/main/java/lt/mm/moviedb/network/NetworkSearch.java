@@ -7,6 +7,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import lt.mm.moviedb.Constants;
+import lt.mm.moviedb.entities.SearchItem;
+import lt.mm.moviedb.entities.SearchList;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectReader;
+
+import java.io.IOException;
 
 /**
  * Created by mariusmerkevicius on 7/26/15.
@@ -38,6 +45,8 @@ public class NetworkSearch {
             queue.stop();
         if (stringRequest != null)
             queue.cancelAll(stringRequest);
+        // todo remove this
+        search = "terminator";
         String url = Constants.BASE_URL + Constants.LINK + "?" + Constants.API_KEY +"&" + QUERY_PREFIX + search;
         stringRequest = new StringRequest(Request.Method.GET, url, responseListener, errorListener);
         queue.add(stringRequest);
@@ -72,6 +81,20 @@ public class NetworkSearch {
         public void onResponse(String response) {
             if (stringRequest == null)
                 return;
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,true);
+//            mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+//            mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+            ObjectReader objectReader = mapper.reader(SearchList.class);
+            SearchList returnResponse = null;
+            try {
+                returnResponse = objectReader.readValue(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             if (loadListener != null)
                 loadListener.onLoadSuccess(stringRequest.getUrl(), response);
             stringRequest = null;
