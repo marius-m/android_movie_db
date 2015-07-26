@@ -56,13 +56,13 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onLoadSuccess(String response) {
-
+        public void onLoadSuccess(String request, String response) {
+            Log.debugWarning("Response ("+request+"): "+response);
         }
 
         @Override
         public void onLoadFail(String error) {
-
+            Log.debugWarning("Fail: "+error);
         }
     };
 
@@ -71,6 +71,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         public void onInputChange(String input) {
             Log.debugError("Input:" +input);
+            networkSearch.search(input);
         }
     };
 
