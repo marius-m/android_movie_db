@@ -1,5 +1,6 @@
 package lt.mm.moviedb.entities;
 
+import android.text.TextUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.Serializable;
@@ -61,4 +62,76 @@ public class ConfigurationEntity implements Serializable {
     public void setChangeKeys(ArrayList<String> changeKeys) {
         this.changeKeys = changeKeys;
     }
+
+    //region Convenience
+
+    public String formPosterImageUrl(String postfix, int screenWidth) {
+        if (TextUtils.isEmpty(postfix))
+            return null;
+        if (images == null)
+            return null;
+        if (TextUtils.isEmpty(images.baseUrl))
+            return null;
+        if (images.profileSizes == null)
+            return null;
+        if (images.profileSizes.size() == 0)
+            return null;
+        ArrayList<Integer> sizes = parseWidthSizes(images.profileSizes);
+        if (sizes.size() == 0)
+            return null;
+        return images.baseUrl + "w" + closestSize(sizes, screenWidth) + postfix;
+    }
+
+    int closestSize(ArrayList<Integer> sizes, int screenWidth) {
+        int nearest = -1;
+        int bestDistanceFoundYet = Integer.MAX_VALUE;
+        for (Integer size : sizes) {
+            if (size == screenWidth) {
+                return size;
+            } else {
+                int d = Math.abs(screenWidth - size);
+                if (d < bestDistanceFoundYet) {
+                    bestDistanceFoundYet = d;
+                    nearest = size;
+                }
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Returns parsed out width sizes from the string reference
+     * @param profileSizes provided profile sizes
+     * @return
+     */
+    public ArrayList<Integer> parseWidthSizes(ArrayList<String> profileSizes) {
+        ArrayList<Integer> parseSizes = new ArrayList<>();
+        if (profileSizes == null)
+            return parseSizes;
+        if (profileSizes.size() == 0)
+            return parseSizes;
+        for (String profileSize : profileSizes) {
+            try {
+                parseSizes.add(parseSize(profileSize));
+            } catch (IllegalArgumentException e) {}
+        }
+        return parseSizes;
+    }
+
+    /**
+     * Parses out of string contains width number that could be parsed out and used when calculating screen
+     * @param stringAsSize
+     * @return
+     * @throws IllegalArgumentException
+     */
+    int parseSize(String stringAsSize) throws IllegalArgumentException {
+        if (TextUtils.isEmpty(stringAsSize))
+            throw new IllegalArgumentException("Cannot convert to int!");
+        try {
+            return Integer.parseInt(stringAsSize.replaceAll("w", ""));
+        } catch (NumberFormatException e) { }
+        throw new IllegalArgumentException("Cannot convert to int!");
+    }
+
+    //endregion
 }
