@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends Activity {
 
+    public static final String INSTANCE_SEARCH_RESULT = "INSTANCE_SEARCH_RESULT";
     private NetworkSearch networkSearch;
     private ProgressBar progressBar;
     private MovieSearchInput searchInput;
@@ -96,6 +97,23 @@ public class SearchActivity extends Activity {
             ((ArrayAdapter) outputList.getAdapter()).notifyDataSetChanged();
         }
     };
+
+    //endregion
+
+    //region Instance saving
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(INSTANCE_SEARCH_RESULT, searchItems);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        searchItems.clear();
+        searchItems.addAll((ArrayList<SearchItem>)savedInstanceState.getSerializable(INSTANCE_SEARCH_RESULT));
+    }
 
     //endregion
 

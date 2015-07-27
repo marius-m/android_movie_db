@@ -2,13 +2,14 @@ package lt.mm.moviedb.entities;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by mariusmerkevicius on 7/26/15.
  * Entity that holds search item
  */
-public class SearchItem {
+public class SearchItem implements Serializable {
     @JsonProperty(value = "adult")
     boolean adult;
     @JsonProperty(value = "backdrop_path")
