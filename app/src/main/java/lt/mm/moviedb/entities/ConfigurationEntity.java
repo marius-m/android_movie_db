@@ -82,6 +82,23 @@ public class ConfigurationEntity implements Serializable {
         return images.baseUrl + "w" + closestSize(sizes, screenWidth) + postfix;
     }
 
+    public String formOriginalPosterImageUrl(String postfix) {
+        if (TextUtils.isEmpty(postfix))
+            return null;
+        if (images == null)
+            return null;
+        if (TextUtils.isEmpty(images.baseUrl))
+            return null;
+        if (images.profileSizes == null)
+            return null;
+        if (images.profileSizes.size() == 0)
+            return null;
+        ArrayList<Integer> sizes = parseWidthSizes(images.profileSizes);
+        if (sizes.size() == 0)
+            return null;
+        return images.baseUrl + "original" + postfix;
+    }
+
     int closestSize(ArrayList<Integer> sizes, int screenWidth) {
         int nearest = -1;
         int bestDistanceFoundYet = Integer.MAX_VALUE;
