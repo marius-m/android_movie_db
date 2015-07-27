@@ -1,16 +1,13 @@
 package lt.mm.moviedb;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import lt.mm.moviedb.adapters.SearchAdapter;
 import lt.mm.moviedb.controllers.UserInputController;
@@ -52,6 +49,14 @@ public class SearchActivity extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progress);
         outputList = (ListView) findViewById(R.id.output_list);
         outputList.setAdapter(new SearchAdapter(this, searchItems));
+        outputList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
+                intent.putExtra(DetailActivity.BUNDLE_ID, searchItems.get(i).getId());
+                startActivity(intent);
+            }
+        });
 
         // Initial state update
         updateViewsByLoadStateChange();
