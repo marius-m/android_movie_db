@@ -25,7 +25,7 @@ public class NetworkSearch extends AbsNetwork<SearchList> {
 
     @Override
     protected String urlSectionLink() {
-        return Constants.MOVIE_LINK;
+        return Constants.LINK_SEARCH_MOVIE;
     }
 
     /**

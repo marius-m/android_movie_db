@@ -2,6 +2,7 @@ package lt.mm.moviedb.network;
 
 import android.content.Context;
 import com.android.volley.RequestQueue;
+import lt.mm.moviedb.Constants;
 import lt.mm.moviedb.entities.ConfigurationEntity;
 import lt.mm.moviedb.persistance.Settings;
 
@@ -34,7 +35,7 @@ public class NetworkConfiguration extends AbsNetwork<ConfigurationEntity> {
 
     @Override
     protected String urlSectionLink() {
-        return "configuration";
+        return Constants.LINK_CONFIGURATION;
     }
 
     public void loadConfiguration() {

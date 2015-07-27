@@ -3,6 +3,7 @@ package lt.mm.moviedb;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.android.volley.Request;
@@ -12,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import lt.mm.moviedb.adapters.SearchAdapter;
+import lt.mm.moviedb.controllers.UserInputController;
 import lt.mm.moviedb.entities.SearchItem;
 import lt.mm.moviedb.entities.SearchList;
 import lt.mm.moviedb.network.LoadListener;
@@ -41,11 +43,10 @@ public class SearchActivity extends Activity {
         // Controller init
         networkSearch = new NetworkSearch(SearchList.class, Volley.newRequestQueue(this));
         networkSearch.setLoadListener(loadListener);
-        configurationCall();
 
         // View init
         searchInput = (MovieSearchInput) findViewById(R.id.input_search);
-        searchInput.setInputListener(inputListener);
+        searchInput.setInputListener(userInputListener);
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
         outputList = (ListView) findViewById(R.id.output_list);
@@ -53,25 +54,6 @@ public class SearchActivity extends Activity {
 
         // Initial state update
         updateViewsByLoadStateChange();
-    }
-
-    private void configurationCall() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = Constants.BASE_URL + "configuration" + "?" + Constants.API_KEY;
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error.toString());
-            }
-        });
-        queue.add(request);
-        queue.start();
     }
 
     //region Convenience
@@ -102,14 +84,18 @@ public class SearchActivity extends Activity {
         }
     };
 
-    MovieSearchInput.InputListener inputListener = new MovieSearchInput.InputListener() {
+    UserInputController.Listener userInputListener = new UserInputController.Listener() {
         @Override
         public void onInputChange(String input) {
-            Log.debugError("Input:" +input);
             networkSearch.search(input);
         }
-    };
 
+        @Override
+        public void onInputClear() {
+            searchItems.clear();
+            ((ArrayAdapter) outputList.getAdapter()).notifyDataSetChanged();
+        }
+    };
 
     //endregion
 

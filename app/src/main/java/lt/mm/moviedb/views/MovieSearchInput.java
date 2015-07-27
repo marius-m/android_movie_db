@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import lt.mm.moviedb.controllers.UserInputController;
 import lt.mm.moviedb.utils.Utils;
 
 /**
@@ -17,9 +18,9 @@ import lt.mm.moviedb.utils.Utils;
  * View class that is responsible for handling user input.
  */
 public class MovieSearchInput extends RelativeLayout {
-    private EditText inputView;
 
-    InputListener inputListener;
+    private EditText inputView;
+    private UserInputController userInputController;
 
     public MovieSearchInput(Context context) {
         super(context);
@@ -44,18 +45,12 @@ public class MovieSearchInput extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleAttr1) {
         initChildViews(context);
+        userInputController = new UserInputController(null);
     }
 
     //region Convenience
 
     private void initChildViews(Context context) {
-        // No progress bar in search input for more decoupled handling.
-//        progressBar = new ProgressBar(context);
-//        LayoutParams progressParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        progressParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-//        progressBar.setId(Utils.generateViewId());
-//        progressBar.setVisibility(GONE);
-//        addView(progressBar, progressParams);
         inputView = new EditText(context);
         LayoutParams editParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         inputView.addTextChangedListener(inputWatcher);
@@ -66,8 +61,8 @@ public class MovieSearchInput extends RelativeLayout {
 
     //region Getters / Setters
 
-    public void setInputListener(InputListener inputListener) {
-        this.inputListener = inputListener;
+    public void setInputListener(UserInputController.Listener inputListener) {
+        userInputController.setListener(inputListener);
     }
 
     //endregion
@@ -80,8 +75,7 @@ public class MovieSearchInput extends RelativeLayout {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (inputListener != null)
-                inputListener.onInputChange(String.valueOf(charSequence));
+            userInputController.handleInput(String.valueOf(charSequence));
         }
 
         @Override
@@ -94,9 +88,9 @@ public class MovieSearchInput extends RelativeLayout {
 
     //region Classes
 
-    public interface InputListener {
-        void onInputChange(String input);
-    }
+//    public interface InputListener {
+//        void onInputChange(String input);
+//    }
 
     //endregion
 

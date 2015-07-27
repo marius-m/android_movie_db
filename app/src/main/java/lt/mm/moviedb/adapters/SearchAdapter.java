@@ -36,6 +36,10 @@ public class SearchAdapter extends ArrayAdapter<SearchItem> {
         this.searchItems = searchItems;
     }
 
+    public ArrayList<SearchItem> getSearchItems() {
+        return searchItems;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
