@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 public class DetailActivity extends Activity {
     public static final String BUNDLE_ID = "BUNDLE_ID";
+    public static final String INSTANCE_DETAIL_MODEL = "INSTANCE_DETAIL_MODEL";
 
     private ImageLoader imageLoader;
 
@@ -51,7 +52,8 @@ public class DetailActivity extends Activity {
         imageLoader = ImageLoader.getInstance();
         NetworkDetail networkDetail = new NetworkDetail(Volley.newRequestQueue(this));
         networkDetail.setLoadListener(loadListener);
-        networkDetail.load(getIntent().getExtras().getInt(BUNDLE_ID));
+        if (savedInstanceState == null)
+            networkDetail.load(getIntent().getExtras().getInt(BUNDLE_ID));
 
         // Views
         progressBar = (ProgressBar) findViewById(R.id.progress);
@@ -94,10 +96,28 @@ public class DetailActivity extends Activity {
 
         @Override
         public void onLoadFail(String error) {
-
+            // todo : inform user that the id does not exist !
+            finish();
         }
     };
 
+    //endregion
+
+    //region Instance saving
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(INSTANCE_DETAIL_MODEL, detailItem);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        detailItem = (DetailItem) savedInstanceState.getSerializable(INSTANCE_DETAIL_MODEL);
+        updateViews();
+    }
 
     //endregion
+
 }
