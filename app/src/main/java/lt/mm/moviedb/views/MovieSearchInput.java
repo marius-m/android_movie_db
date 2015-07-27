@@ -3,6 +3,8 @@ package lt.mm.moviedb.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -83,6 +85,66 @@ public class MovieSearchInput extends RelativeLayout {
 
         }
     };
+
+    //endregion
+
+    //region Instance saving
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(superState);
+        savedState.input = inputView.getText().toString();
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if(!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+        SavedState savedState = (SavedState)state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        this.inputView.removeTextChangedListener(inputWatcher);
+        this.inputView.setText(savedState.input);
+        this.inputView.addTextChangedListener(inputWatcher);
+    }
+
+    private static class SavedState extends BaseSavedState {
+        public String input;
+
+        public SavedState(Parcel source) {
+            super(source);
+            if (source.readInt() == 1)
+                input = source.readString();
+        }
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt((input != null) ? 1 : 0);
+            if (input != null)
+                dest.writeString(input);
+        }
+
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+
+    }
 
     //endregion
 
